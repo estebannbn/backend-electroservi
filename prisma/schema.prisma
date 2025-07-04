@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           Int           @id @default(autoincrement())
+  nombre       String
+  apellido     String
+  cuil         String
+  telefono     String
+  direccion    String
+  mail         String
+  contraseña   String
+  tecnico      Tecnico?
+  administrador Administrador?
+  cliente      Cliente?
+}
+
+model Tecnico {
+  id         Int       @id
+  estado     String
+  usuario    Usuario   @relation(fields: [id], references: [id])
+  trabajos   Trabajo[]
+  pagos      Pago[]
+  servicios  Servicio[]
+}
+
+model Administrador {
+  id         Int      @id
+  usuario    Usuario  @relation(fields: [id], references: [id])
+}
+
+model Cliente {
+  id                   Int              @id
+  servicios            Servicio[]
+  electrodomesticos    Electrodomestico[]
+  usuario    Usuario  @relation(fields: [id], references: [id])
+}
+
+model Pago {
+  id         Int      @id @default(autoincrement())
+  fechaPago  DateTime
+  monto      Float
+  tecnicoId  Int
+  tecnico    Tecnico  @relation(fields: [tecnicoId], references: [id])
+}
+
+model Trabajo {
+  id          Int       @id @default(autoincrement())
+  fechaDesde  DateTime
+  fechaHasta  DateTime?
+  tecnicoId   Int
+  tecnico     Tecnico   @relation(fields: [tecnicoId], references: [id])
+}
+
+model Servicio {
+  id                    Int               @id @default(autoincrement())
+  estado                String
+  fechaLlegadaEstimada DateTime
+  fechaLlegadaReal     DateTime
+  fechaDiagnostico     DateTime
+  fechaReparacion      DateTime
+  fechaRetiro          DateTime
+  fechaFin             DateTime?
+  comentario           String?
+  tecnicoId            Int
+  clienteId            Int
+  tipoReparacionId     Int
+  electrodomesticoId   Int
+  tecnico              Tecnico           @relation(fields: [tecnicoId], references: [id])
+  cliente              Cliente           @relation(fields: [clienteId], references: [id])
+  tipoReparacion       TipoReparacion    @relation(fields: [tipoReparacionId], references: [id])
+  electrodomestico     Electrodomestico  @relation(fields: [electrodomesticoId], references: [id])
+  itemsMaterial        ItemDeMaterial[]
+  itemsRepuesto        ItemDeRepuesto[]
+}
+
+model Electrodomestico {
+  id         Int        @id @default(autoincrement())
+  modelo     String
+  marca      String
+  clienteId  Int
+  cliente    Cliente    @relation(fields: [clienteId], references: [id])
+  servicios  Servicio[]
+}
+
+model TipoReparacion {
+  id                  Int         @id @default(autoincrement())
+  denominacion        String
+  precio              Float
+  porcentajeTecnico   Float
+  porcentajeRepuesto  Float
+  servicios           Servicio[]
+}
+
+model ItemDeMaterial {
+  id                  Int       @id @default(autoincrement())
+  cantidadDeMaterial  Int
+  servicioId          Int
+  materialId          Int
+  servicio            Servicio  @relation(fields: [servicioId], references: [id])
+  material            Material  @relation(fields: [materialId], references: [id])
+}
+
+model ItemDeRepuesto {
+  id                  Int       @id @default(autoincrement())
+  cantidadDeRepuesto  Int
+  servicioId          Int
+  repuestoId          Int
+  servicio            Servicio  @relation(fields: [servicioId], references: [id])
+  repuesto            Repuesto  @relation(fields: [repuestoId], references: [id])
+}
+
+model Repuesto {
+  id                 Int              @id @default(autoincrement())
+  codigo             String
+  nombre             String
+  cantidadActual     Int
+  cantidadAlerta     Int
+  precioVentaActual  Float
+  precios            PrecioRepuesto[]
+  items              ItemDeRepuesto[]
+}
+
+model PrecioRepuesto {
+  id            Int       @id @default(autoincrement())
+  precioCompra  Float
+  fechaCompra   DateTime
+  repuestoId    Int
+  repuesto      Repuesto  @relation(fields: [repuestoId], references: [id])
+}
+
+model Material {
+  id                 Int              @id @default(autoincrement())
+  codigo             String
+  nombre             String
+  cantidadActual     Int
+  cantidadAlerta     Int
+  precioVentaActual  Float
+  precios            PrecioMaterial[]
+  items              ItemDeMaterial[]
+}
+
+model PrecioMaterial {
+  id                  Int       @id @default(autoincrement())
+  precioCompraUnidad  Float
+  fechaCompra         DateTime
+  materialId          Int
+  material            Material  @relation(fields: [materialId], references: [id])
+}
