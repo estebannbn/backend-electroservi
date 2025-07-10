@@ -1,4 +1,6 @@
-export interface UsuarioInput {
+export type TipoUsuario = "tecnico" | "cliente" | "administrador";
+
+export interface CrearUsuarioInput {
   nombre: string;
   apellido: string;
   cuil: string;

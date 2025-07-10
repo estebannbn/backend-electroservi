@@ -3,13 +3,9 @@
 // TODO: Mejorar el sistema de validacion con Zod ?
 
 import { Request, Response } from "express";
+import { obtenerUsuarios } from "../services/usuarioService";
 
-export const getUsuarios = (_req: Request, res: Response) => {
-
-    res.json([{ id: 1, nombre: "Juan" }, { id: 2, nombre: "Ana" }]);
-};
-
-export const crearUsuario = (req: Request, res: Response) => {
-    const nuevo = req.body;
-    res.status(201).json({ mensaje: "Usuario creado", datos: nuevo });
+export const getUsuarios = async(_req: Request, res: Response) => {
+    const usuarios = await obtenerUsuarios('todos')
+    res.json({usuarios});
 };

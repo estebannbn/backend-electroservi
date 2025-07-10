@@ -28,7 +28,7 @@ model Usuario {
 
 model Tecnico {
   id         Int       @id
-  estado     String
+  estado     estadoTecnico    @default(DISPONIBLE)
   usuario    Usuario   @relation(fields: [id], references: [id])
   trabajos   Trabajo[]
   pagos      Pago[]
@@ -64,22 +64,22 @@ model Trabajo {
 }
 
 model Servicio {
-  id                    Int               @id @default(autoincrement())
-  estado                String
+  id                   Int               @id @default(autoincrement())
+  estado               estadoServicio     @default(PENDIENTE)
   fechaLlegadaEstimada DateTime
-  fechaLlegadaReal     DateTime
-  fechaDiagnostico     DateTime
-  fechaReparacion      DateTime
-  fechaRetiro          DateTime
+  fechaLlegadaReal     DateTime?
+  fechaDiagnostico     DateTime?
+  fechaReparacion      DateTime?
+  fechaRetiro          DateTime?
   fechaFin             DateTime?
   comentario           String?
-  tecnicoId            Int
+  tecnicoId            Int?
   clienteId            Int
-  tipoReparacionId     Int
+  tipoReparacionId     Int?
   electrodomesticoId   Int
-  tecnico              Tecnico           @relation(fields: [tecnicoId], references: [id])
+  tecnico              Tecnico?           @relation(fields: [tecnicoId], references: [id])
   cliente              Cliente           @relation(fields: [clienteId], references: [id])
-  tipoReparacion       TipoReparacion    @relation(fields: [tipoReparacionId], references: [id])
+  tipoReparacion       TipoReparacion?    @relation(fields: [tipoReparacionId], references: [id])
   electrodomestico     Electrodomestico  @relation(fields: [electrodomesticoId], references: [id])
   itemsMaterial        ItemDeMaterial[]
   itemsRepuesto        ItemDeRepuesto[]
@@ -157,4 +157,18 @@ model PrecioMaterial {
   fechaCompra         DateTime
   materialId          Int
   material            Material  @relation(fields: [materialId], references: [id])
+}
+
+enum estadoTecnico {
+  DISPONIBLE
+  OCUPADO
+}
+
+enum estadoServicio {
+  PENDIENTE
+  EN_REPARACION
+  REPARADO
+  PAGADO
+  ENTREGADO
+  CANCELADO
 }
