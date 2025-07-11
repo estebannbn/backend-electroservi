@@ -5,7 +5,12 @@
 import { Request, Response } from "express";
 import { obtenerUsuarios } from "../services/usuarioService";
 
-export const getUsuarios = async(_req: Request, res: Response) => {
+// En plural, traer todos los usuarios
+export const obtenerUsuariosController = async(_req: Request, res: Response) => {
     const usuarios = await obtenerUsuarios('todos')
     res.json({usuarios});
 };
+
+export const crearUsuarioController = async(req: Request, res: Response) => {
+    
+}

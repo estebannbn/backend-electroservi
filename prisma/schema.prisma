@@ -75,11 +75,11 @@ model Servicio {
   comentario           String?
   tecnicoId            Int?
   clienteId            Int
-  tipoReparacionId     Int?
+  tipoTrabajoId     Int?
   electrodomesticoId   Int
   tecnico              Tecnico?           @relation(fields: [tecnicoId], references: [id])
   cliente              Cliente           @relation(fields: [clienteId], references: [id])
-  tipoReparacion       TipoReparacion?    @relation(fields: [tipoReparacionId], references: [id])
+  tipoTrabajo          TipoTrabajo?    @relation(fields: [tipoTrabajoId], references: [id])
   electrodomestico     Electrodomestico  @relation(fields: [electrodomesticoId], references: [id])
   itemsMaterial        ItemDeMaterial[]
   itemsRepuesto        ItemDeRepuesto[]
@@ -94,7 +94,7 @@ model Electrodomestico {
   servicios  Servicio[]
 }
 
-model TipoReparacion {
+model TipoTrabajo {
   id                  Int         @id @default(autoincrement())
   denominacion        String
   precio              Float

@@ -45,6 +45,7 @@ const crearCliente = async (data: CrearUsuarioInput) => {
 }
 
 
+
 // OBTENIENDO USUARIOS
 
 export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
