@@ -16,7 +16,7 @@ const crearUsuario = (data: CrearUsuarioInput) => {
 // Primero creamos el usuario, luego, a partir de su id, creamos 
 // el tecnico, cliente o administrador
 
-const crearAdministrador = async (data: CrearUsuarioInput) => {
+export const crearAdministrador = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
     prisma.administrador.create({
         data:{
@@ -26,7 +26,7 @@ const crearAdministrador = async (data: CrearUsuarioInput) => {
 }
 
 
-const crearTecnico = async (data: CrearUsuarioInput) => {
+export const crearTecnico = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
     prisma.tecnico.create({
         data:{
@@ -35,7 +35,7 @@ const crearTecnico = async (data: CrearUsuarioInput) => {
     })
 }
 
-const crearCliente = async (data: CrearUsuarioInput) => {
+export const crearCliente = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
     prisma.tecnico.create({
         data:{
@@ -48,14 +48,16 @@ const crearCliente = async (data: CrearUsuarioInput) => {
 
 // OBTENIENDO USUARIOS
 
-export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
+export const obtenerUsuarios = async (tipoElegido: TipoUsuario) => {
     switch(tipoElegido) {
         case 'tecnico':
         return await prisma.usuario.findMany({
+            // Condicional: Si el campo tecnico no es nulo, entonces es un tecnico
             where:{
                 tecnico: {isNot: null}
             },
-            include: { tecnico: true}
+            // El include nos permite traer los datos especificos del tecnico
+            include: { tecnico: true }
         })
         case 'administrador':
         return await prisma.usuario.findMany({
@@ -71,11 +73,8 @@ export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
             },
             include: { cliente: true }
         })
-        case 'todos':
+
         return await prisma.usuario.findMany({
-            where:{
-                cliente: {isNot: null}
-            },
             include: {
                 tecnico: true,
                 administrador: true,

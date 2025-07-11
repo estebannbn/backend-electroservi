@@ -75,7 +75,7 @@ model Servicio {
   comentario           String?
   tecnicoId            Int?
   clienteId            Int
-  tipoTrabajoId     Int?
+  tipoTrabajoId        Int?
   electrodomesticoId   Int
   tecnico              Tecnico?           @relation(fields: [tecnicoId], references: [id])
   cliente              Cliente           @relation(fields: [clienteId], references: [id])
