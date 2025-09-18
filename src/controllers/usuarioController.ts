@@ -4,10 +4,14 @@
 
 import { Request, Response } from "express";
 import { obtenerUsuarios } from "../services/usuarioService";
+import { TipoUsuario } from "../interfaces";
+
+
 
 // En plural, traer todos los usuarios
-export const obtenerUsuariosController = async(_req: Request, res: Response) => {
-    const usuarios = await obtenerUsuarios('todos')
+export const obtenerUsuariosController = async(_req: Request<TipoUsuario>, res: Response) => {
+    const tipo = _req.params || 'todos'
+    const usuarios = await obtenerUsuarios(tipo)
     res.json({usuarios});
 };
 
