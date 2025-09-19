@@ -1,14 +1,10 @@
 // Este archivo contiene logica basica para la gestion de usuarios
 // Estos servicios seran llamados desde los controladores de los diferentes tipos de usuario
 
-import { PrismaClient, Prisma, Administrador } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { CrearUsuarioInput, TipoUsuario } from "../interfaces";
 
 const prisma = new PrismaClient();
-
-const crearUsuario = (data: CrearUsuarioInput) => {
-    prisma.usuario.create({data})
-}
 
 
 // CREANDO USUARIOS
@@ -16,32 +12,29 @@ const crearUsuario = (data: CrearUsuarioInput) => {
 // Primero creamos el usuario, luego, a partir de su id, creamos 
 // el tecnico, cliente o administrador
 
-const crearAdministrador = async (data: CrearUsuarioInput) => {
-    const usuario = await prisma.usuario.create({data})
-    prisma.administrador.create({
-        data:{
-            id: usuario.id
-        }
+export const crearAdministrador = async (data: CrearUsuarioInput) => {
+    const usuario = await prisma.usuario.create({
+        data,
+        include: { administrador: true }
     })
+    return usuario
 }
 
 
-const crearTecnico = async (data: CrearUsuarioInput) => {
-    const usuario = await prisma.usuario.create({data})
-    prisma.tecnico.create({
-        data:{
-            id: usuario.id
-        }
+export const crearTecnico = async (data: CrearUsuarioInput) => {
+    const usuario = await prisma.usuario.create({
+        data,
+        include: { tecnico: true }
     })
+    return usuario
 }
 
-const crearCliente = async (data: CrearUsuarioInput) => {
-    const usuario = await prisma.usuario.create({data})
-    prisma.tecnico.create({
-        data:{
-            id: usuario.id
-        }
+export const crearCliente = async (data: CrearUsuarioInput) => {
+    const usuario = await prisma.usuario.create({
+        data,
+        include: { cliente: true }
     })
+    return usuario
 }
 
 
