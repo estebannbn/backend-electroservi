@@ -1,50 +1,42 @@
 // Este archivo contiene logica basica para la gestion de usuarios
 // Estos servicios seran llamados desde los controladores de los diferentes tipos de usuario
 
-import { PrismaClient, Prisma, Administrador } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { CrearUsuarioInput, TipoUsuario } from "../interfaces";
 
 const prisma = new PrismaClient();
-
-const crearUsuario = (data: CrearUsuarioInput) => {
-    prisma.usuario.create({data})
-}
-
 
 // CREANDO USUARIOS
 
 // Primero creamos el usuario, luego, a partir de su id, creamos 
 // el tecnico, cliente o administrador
 
-const crearAdministrador = async (data: CrearUsuarioInput) => {
+export const crearAdministrador = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
-    prisma.administrador.create({
+    return await prisma.administrador.create({
         data:{
             id: usuario.id
         }
     })
 }
 
-
-const crearTecnico = async (data: CrearUsuarioInput) => {
+export const crearTecnico = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
-    prisma.tecnico.create({
+    return await prisma.tecnico.create({
         data:{
             id: usuario.id
         }
     })
 }
 
-const crearCliente = async (data: CrearUsuarioInput) => {
+export const crearCliente = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
-    prisma.tecnico.create({
+    return await prisma.cliente.create({
         data:{
             id: usuario.id
         }
     })
 }
-
-
 
 // OBTENIENDO USUARIOS
 
