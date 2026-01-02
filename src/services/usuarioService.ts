@@ -2,7 +2,7 @@
 // Estos servicios seran llamados desde los controladores de los diferentes tipos de usuario
 
 import { PrismaClient } from "@prisma/client";
-import { CrearUsuarioInput, TipoUsuario } from "../interfaces";
+import { CrearUsuarioInput, TipoUsuario} from "../interfaces";
 
 const prisma = new PrismaClient();
 
@@ -37,6 +37,26 @@ export const crearCliente = async (data: CrearUsuarioInput) => {
         }
     })
 }
+
+
+// EDITANDO USUARIOS
+// TODO: el mail debe ser @unique
+export const editarUsuario = async(id: number, data: Partial<CrearUsuarioInput>)=> {
+
+    return prisma.usuario.update({
+        where: {
+            id
+        },
+        data: {
+            nombre: data.nombre,
+            apellido: data.apellido,
+            contraseña: data.contraseña,
+            direccion: data.direccion,
+            telefono: data.telefono
+        }
+    })
+}
+
 
 // OBTENIENDO USUARIOS
 
