@@ -16,5 +16,5 @@ export const obtenerUsuariosController = async(_req: Request<TipoUsuario>, res: 
 };
 
 export const crearUsuarioController = async(req: Request, res: Response) => {
-    
+
 }
