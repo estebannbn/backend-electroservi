@@ -1,24 +1,37 @@
 // Este archivo contiene logica basica para la gestion de usuarios
 // Estos servicios seran llamados desde los controladores de los diferentes tipos de usuario
 
-import { PrismaClient, Prisma, Administrador } from "@prisma/client";
-import { CrearUsuarioInput, TipoUsuario } from "../interfaces";
+import { PrismaClient } from "@prisma/client";
+import { CrearUsuarioInput, TipoUsuario} from "../interfaces";
 
 const prisma = new PrismaClient();
-
-const crearUsuario = (data: CrearUsuarioInput) => {
-    prisma.usuario.create({data})
-}
-
 
 // CREANDO USUARIOS
 
 // Primero creamos el usuario, luego, a partir de su id, creamos 
 // el tecnico, cliente o administrador
 
-const crearAdministrador = async (data: CrearUsuarioInput) => {
+export const crearAdministrador = async (data: CrearUsuarioInput) => {
     const usuario = await prisma.usuario.create({data})
-    prisma.administrador.create({
+    return await prisma.administrador.create({
+        data:{
+            id: usuario.id
+        }
+    })
+}
+
+export const crearTecnico = async (data: CrearUsuarioInput) => {
+    const usuario = await prisma.usuario.create({data})
+    return await prisma.tecnico.create({
+        data:{
+            id: usuario.id
+        }
+    })
+}
+
+export const crearCliente = async (data: CrearUsuarioInput) => {
+    const usuario = await prisma.usuario.create({data})
+    return await prisma.cliente.create({
         data:{
             id: usuario.id
         }
@@ -26,24 +39,23 @@ const crearAdministrador = async (data: CrearUsuarioInput) => {
 }
 
 
-const crearTecnico = async (data: CrearUsuarioInput) => {
-    const usuario = await prisma.usuario.create({data})
-    prisma.tecnico.create({
-        data:{
-            id: usuario.id
+// EDITANDO USUARIOS
+// TODO: el mail debe ser @unique
+export const editarUsuario = async(id: number, data: Partial<CrearUsuarioInput>)=> {
+
+    return prisma.usuario.update({
+        where: {
+            id
+        },
+        data: {
+            nombre: data.nombre,
+            apellido: data.apellido,
+            contraseña: data.contraseña,
+            direccion: data.direccion,
+            telefono: data.telefono
         }
     })
 }
-
-const crearCliente = async (data: CrearUsuarioInput) => {
-    const usuario = await prisma.usuario.create({data})
-    prisma.tecnico.create({
-        data:{
-            id: usuario.id
-        }
-    })
-}
-
 
 
 // OBTENIENDO USUARIOS

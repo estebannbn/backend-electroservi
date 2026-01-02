@@ -16,10 +16,10 @@ model Usuario {
   id           Int           @id @default(autoincrement())
   nombre       String
   apellido     String
-  cuil         String
+  cuil         String @unique
   telefono     String
   direccion    String
-  mail         String
+  mail         String @unique
   contraseña   String
   tecnico      Tecnico?
   administrador Administrador?
