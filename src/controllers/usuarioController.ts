@@ -16,8 +16,8 @@ import { TipoUsuario, CrearUsuarioInput } from "../interfaces";
 
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch
-export const obtenerUsuariosController = async(_req: Request<null,null,null,TipoUsuario>, res: Response) => {
-    const tipo = _req.query
+export const obtenerUsuariosController = async(_req: Request<null,null,null,{tipo: TipoUsuario}>, res: Response) => {
+    const {tipo} = _req.query
     const usuarios = await obtenerUsuarios(tipo)
     res.json({usuarios});
 };
@@ -32,6 +32,7 @@ export const obtenerUsuarioController = async(_req: Request<number, null, null, 
 export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, CrearUsuarioInput, null>, res: Response) => {
     try {
         const {tipo} = _req.params;
+        console.log(tipo)
         const datosUsuario: CrearUsuarioInput = _req.body;
         if (!tipo) {
             return res.status(400).json({ error: "Falta parámetro 'tipo' en la ruta" });
