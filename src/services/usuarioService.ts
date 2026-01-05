@@ -60,7 +60,7 @@ export const editarUsuario = async(id: number, data: Partial<CrearUsuarioInput>)
 
 // OBTENIENDO USUARIOS
 
-export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
+export const obtenerUsuarios = async(tipoElegido: TipoUsuario) => {
     switch(tipoElegido) {
         case 'tecnico':
         return await prisma.usuario.findMany({
@@ -85,9 +85,6 @@ export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
         })
         default:
         return await prisma.usuario.findMany({
-            where:{
-                cliente: {isNot: null}
-            },
             include: {
                 tecnico: true,
                 administrador: true,
