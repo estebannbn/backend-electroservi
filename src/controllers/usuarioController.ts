@@ -10,16 +10,17 @@ import {
     crearAdministrador,
     editarUsuario, obtenerUsuarioPorId
 } from "../services/usuarioService";
-import { TipoUsuario, CrearUsuarioInput } from "../interfaces";
+import { TipoUsuario, CrearUsuarioInput } from "../Interfaces/usuario";
 
 
 
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch
-export const obtenerUsuariosController = async(_req: Request<null,null,null,TipoUsuario>, res: Response) => {
-    const tipo = _req.query
-    const usuarios = await obtenerUsuarios(tipo)
-    res.json({usuarios});
+export const obtenerUsuariosController = async(_req: Request<null,null,null, { tipo: TipoUsuario }>, res: Response) => {
+    const { tipo = 'todos' } = _req.query || {};
+    console.log("Tipo de usuario solicitado:", tipo);
+    const usuarios = await obtenerUsuarios(tipo);
+    res.json({ usuarios });
 };
 
 /*
@@ -59,12 +60,13 @@ export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario },
 }
 
 
-export const editarUsuarioController = async(_req: Request<number, any, Partial<CrearUsuarioInput>, any>, res: Response) => {
+export const editarUsuarioController = async(_req: Request<{ id: string }, any, Partial<CrearUsuarioInput>, any>, res: Response) => {
     try {
-        const id = _req.params
-        const datosUsuario = _req.body
-        return await editarUsuario(id, datosUsuario)
-    }catch (error) {
+        const id = Number(_req.params.id);
+        const datosUsuario = _req.body;
+        const usuarioActualizado = await editarUsuario(id, datosUsuario);
+        return res.json({ usuario: usuarioActualizado });
+    } catch (error) {
         console.error("Error al editar usuario:", error);
         return res.status(500).json({ error: "Error interno del servidor al editar el usuario" });
     }

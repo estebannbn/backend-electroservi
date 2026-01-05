@@ -87,6 +87,7 @@ model Servicio {
 
 model Electrodomestico {
   id         Int        @id @default(autoincrement())
+  tipo       tipoElectrodomestico
   modelo     String
   marca      String
   clienteId  Int
@@ -171,4 +172,10 @@ enum estadoServicio {
   PAGADO
   ENTREGADO
   CANCELADO
+}
+
+enum tipoElectrodomestico {
+  AIRE_ACONDICIONADO
+  LAVARROPAS
+  HELADERA
 }
