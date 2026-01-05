@@ -8,7 +8,7 @@ import {
     crearTecnico,
     crearCliente,
     crearAdministrador,
-    editarUsuario
+    editarUsuario, obtenerUsuarioPorId
 } from "../services/usuarioService";
 import { TipoUsuario, CrearUsuarioInput } from "../interfaces";
 
@@ -17,10 +17,17 @@ import { TipoUsuario, CrearUsuarioInput } from "../interfaces";
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch
 export const obtenerUsuariosController = async(_req: Request<null,null,null,TipoUsuario>, res: Response) => {
-    const tipo = _req.query || 'todos'
+    const tipo = _req.query
     const usuarios = await obtenerUsuarios(tipo)
     res.json({usuarios});
 };
+
+/*
+export const obtenerUsuarioController = async(_req: Request<number, null, null, null>, res: Response) => {
+    const usuario = await obtenerUsuarioPorId(id)
+    res.json({usuario});
+}
+*/
 
 export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, CrearUsuarioInput, null>, res: Response) => {
     try {

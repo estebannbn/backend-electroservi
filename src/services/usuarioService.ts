@@ -83,7 +83,7 @@ export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
             },
             include: { cliente: true }
         })
-        case 'todos':
+        default:
         return await prisma.usuario.findMany({
             where:{
                 cliente: {isNot: null}
@@ -95,4 +95,8 @@ export const obtenerUsuarios = async(tipoElegido: TipoUsuario | 'todos') => {
             }
         })
     }
+}
+
+export const obtenerUsuarioPorId = async(id: number) => {
+    return await prisma.usuario.findUnique({where: {id}})
 }

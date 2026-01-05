@@ -7,8 +7,8 @@ import {
 
 const router = Router();
 
-router.get('/usuarios', obtenerUsuariosController);
-router.post('/usuarios/:tipo', crearUsuarioController);
-router.put('/usuarios/:id', editarUsuarioController);
+router.get('/', obtenerUsuariosController);
+router.post('/:tipo', crearUsuarioController);
+router.put('/:id', editarUsuarioController);
 
 export default router;
