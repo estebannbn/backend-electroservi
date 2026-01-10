@@ -9,6 +9,7 @@
   "author": "Esteban Bellini; Joaquin Garabelli, Lara Hintersech",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.10",
     "nodemon": "^3.1.10",
@@ -19,6 +20,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0"
   }
 }

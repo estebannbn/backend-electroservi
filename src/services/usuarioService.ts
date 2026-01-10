@@ -94,6 +94,7 @@ export const obtenerUsuarios = async(tipoElegido: TipoUsuario) => {
     }
 }
 
-export const obtenerUsuarioPorId = async(id: number) => {
-    return await prisma.usuario.findUnique({where: {id}})
+export const obtenerUsuarioPorEmail = async(mail: string) => {
+    return await prisma.usuario.findUnique({where: {mail}})
 }
+

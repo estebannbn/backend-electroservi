@@ -10,3 +10,8 @@ export interface CrearUsuarioInput {
   mail: string;
   contraseña: string;
 }
+
+export interface LoginInput {
+    mail: string;
+    contraseña: string;
+}
