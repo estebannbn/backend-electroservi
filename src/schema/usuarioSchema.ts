@@ -3,23 +3,7 @@ import {z} from 'zod'
 
 const estadosTecnico = ['DISPONIBLE', 'OCUPADO']
 
-const validarContraseña =  (contraseña: string) :boolean =>{
-    if(contraseña.length < 8) return false;
-    if (!/[a-z]/.test(contraseña)) return false
-    if (!/[A-Z]/.test(contraseña)) return false
-    if (!/\d/.test(contraseña)) return false
-    return true
-}
-
-const errorContraseña =  (contraseña: string) :string =>{
-    if(contraseña.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
-    if (!/[a-z]/.test(contraseña)) return 'La contraseña debe tener al menos una letra minuscula'
-    if (!/[A-Z]/.test(contraseña)) return 'La contraseña debe tener al menos una letra mayúscula'
-    if (!/\d/.test(contraseña)) return 'La contraseña debe tener al menos un número'
-    return 'error'
-}
-
-const Usuario = z.object({
+export const UsuarioSchema = z.object({
     nombre: z.string('El nombre es obligatorio'),
     apellido: z.string('El apellido es obligatorio'),
     cuil: z.stringFormat('cuil', /^(20|23|27|30|33|34)([0-9]{9}|-[0-9]{8}-[0-9])$/g, 'cuil invalido'),
@@ -34,4 +18,4 @@ const Usuario = z.object({
     estado: z.enum(estadosTecnico, 'Estado tecnico invalido').optional()
 })
 
-export type UsuarioType = z.infer<typeof Usuario>
+export type UsuarioType = z.infer<typeof UsuarioSchema>
