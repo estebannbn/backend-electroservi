@@ -10,9 +10,8 @@ import {
     crearAdministrador,
     editarUsuario, obtenerUsuarioPorId
 } from "../services/usuarioService";
-import { TipoUsuario, CrearUsuarioInput } from "../Interfaces/usuario";
-
-
+import { TipoUsuario} from "../Interfaces/usuario";
+import { UsuarioType } from "../schema/usuarioSchema";
 
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch
@@ -22,24 +21,16 @@ export const obtenerUsuariosController = async(_req: Request<null,null,null,{tip
     res.json({usuarios});
 };
 
-/*
-export const obtenerUsuarioController = async(_req: Request<number, null, null, null>, res: Response) => {
-    const usuario = await obtenerUsuarioPorId(id)
-    res.json({usuario});
-}
-*/
 
-export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, CrearUsuarioInput, null>, res: Response) => {
+export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, UsuarioType, null>, res: Response) => {
     try {
         const {tipo} = _req.params;
-        console.log(tipo)
-        const datosUsuario: CrearUsuarioInput = _req.body;
+        const datosUsuario: UsuarioType = _req.body;
         if (!tipo) {
             return res.status(400).json({ error: "Falta parámetro 'tipo' en la ruta" });
         }
 
         let usuario;
-
         if (tipo === "tecnico") {
             usuario = await crearTecnico(datosUsuario);
         } else if (tipo === "cliente") {
@@ -59,8 +50,7 @@ export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario },
     }
 }
 
-
-export const editarUsuarioController = async(_req: Request<{ id: string }, any, Partial<CrearUsuarioInput>, any>, res: Response) => {
+export const editarUsuarioController = async(_req: Request<{ id: string }, any, Partial<UsuarioType>, any>, res: Response) => {
     try {
         const id = Number(_req.params.id);
         const datosUsuario = _req.body;
