@@ -2,7 +2,7 @@
 // Estos servicios seran llamados desde los controladores de los diferentes tipos de usuario
 
 import { PrismaClient } from "@prisma/client";
-import { CrearUsuarioInput as UsuarioType, TipoUsuario} from "../Interfaces/usuario";
+import { TipoUsuario} from "../Interfaces/usuario";
 import { UsuarioType } from "../schema/usuarioSchema";
 
 const prisma = new PrismaClient();

@@ -10,8 +10,8 @@ import {
     crearAdministrador,
     editarUsuario, obtenerUsuarioPorId
 } from "../services/usuarioService";
-import { TipoUsuario, CrearUsuarioInput as UsuarioType } from "../Interfaces/usuario";
-import { UsuarioSchema, UsuarioType } from "../schema/usuarioSchema";
+import { TipoUsuario} from "../Interfaces/usuario";
+import { UsuarioType } from "../schema/usuarioSchema";
 
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch

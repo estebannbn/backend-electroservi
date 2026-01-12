@@ -11,6 +11,6 @@ const router = Router();
 
 router.get('/', obtenerUsuariosController);
 router.post('/:tipo', validateSchema(UsuarioSchema), crearUsuarioController);
-router.put('/:id', validateSchema(UsuarioSchema.partial()), editarUsuarioController);
+router.put('/:id', validateSchema(UsuarioSchema), editarUsuarioController);
 
 export default router;

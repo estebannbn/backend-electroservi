@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodObject, ZodError } from 'zod';
-import {UsuarioType} from "../schema/usuarioSchema";
+import {ZodObject, ZodError, ZodType} from 'zod';
+
 
 export const validateSchema = (schema: ZodObject<any>) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request<null,null,ZodType>, res: Response, next: NextFunction) => {
         try {
             const validation = await schema.safeParseAsync(req.body);
+            console.log('validacion:', validation)
             if (!validation.success) {
                 return res.status(400).json({
                     message: "Error de validación",
