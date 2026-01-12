@@ -2,7 +2,8 @@
 // Estos servicios seran llamados desde los controladores de los diferentes tipos de usuario
 
 import { PrismaClient } from "@prisma/client";
-import { CrearUsuarioInput, TipoUsuario} from "../Interfaces/usuario";
+import { CrearUsuarioInput as UsuarioType, TipoUsuario} from "../Interfaces/usuario";
+import { UsuarioType } from "../schema/usuarioSchema";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ const prisma = new PrismaClient();
 // Primero creamos el usuario, luego, a partir de su id, creamos 
 // el tecnico, cliente o administrador
 
-export const crearAdministrador = async (data: CrearUsuarioInput) => {
+export const crearAdministrador = async (data: UsuarioType) => {
     const usuario = await prisma.usuario.create({data})
     return await prisma.administrador.create({
         data:{
@@ -20,7 +21,7 @@ export const crearAdministrador = async (data: CrearUsuarioInput) => {
     })
 }
 
-export const crearTecnico = async (data: CrearUsuarioInput) => {
+export const crearTecnico = async (data: UsuarioType) => {
     const usuario = await prisma.usuario.create({data})
     return await prisma.tecnico.create({
         data:{
@@ -29,7 +30,7 @@ export const crearTecnico = async (data: CrearUsuarioInput) => {
     })
 }
 
-export const crearCliente = async (data: CrearUsuarioInput) => {
+export const crearCliente = async (data: UsuarioType) => {
     const usuario = await prisma.usuario.create({data})
     return await prisma.cliente.create({
         data:{
@@ -41,7 +42,7 @@ export const crearCliente = async (data: CrearUsuarioInput) => {
 
 // EDITANDO USUARIOS
 // TODO: el mail debe ser @unique
-export const editarUsuario = async(id: number, data: Partial<CrearUsuarioInput>)=> {
+export const editarUsuario = async(id: number, data: Partial<UsuarioType>)=> {
 
     return prisma.usuario.update({
         where: {
