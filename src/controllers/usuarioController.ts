@@ -12,8 +12,7 @@ import {
 } from "../services/usuarioService";
 import {TipoUsuario, CrearUsuarioInput, LoginInput} from "../Interfaces/usuario";
 import {hashPassword, verifyPassword} from "../utils/contraseñaHandler";
-
-
+import { UsuarioType } from "../schema/usuarioSchema";
 
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch
@@ -34,7 +33,6 @@ export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario },
         }
 
         let usuario;
-
         if (tipo === "tecnico") {
             usuario = await crearTecnico(datosUsuario);
         } else if (tipo === "cliente") {
@@ -54,7 +52,7 @@ export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario },
     }
 }
 
-export const editarUsuarioController = async(_req: Request<{ id: string }, any, Partial<CrearUsuarioInput>, any>, res: Response) => {
+export const editarUsuarioController = async(_req: Request<{ id: string }, any, Partial<UsuarioType>, any>, res: Response) => {
     try {
         const id = Number(_req.params.id);
         const datosUsuario = _req.body;
