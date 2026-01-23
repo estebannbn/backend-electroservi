@@ -8,9 +8,10 @@ import {
     crearTecnico,
     crearCliente,
     crearAdministrador,
-    editarUsuario, obtenerUsuarioPorId
+    editarUsuario, obtenerUsuarioPorEmail
 } from "../services/usuarioService";
-import { TipoUsuario} from "../Interfaces/usuario";
+import {TipoUsuario, CrearUsuarioInput, LoginInput} from "../Interfaces/usuario";
+import {hashPassword, verifyPassword} from "../utils/contraseñaHandler";
 import { UsuarioType } from "../schema/usuarioSchema";
 
 // En plural, traer todos los usuarios
@@ -21,11 +22,12 @@ export const obtenerUsuariosController = async(_req: Request<null,null,null,{tip
     res.json({usuarios});
 };
 
-
-export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, UsuarioType, null>, res: Response) => {
+export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, CrearUsuarioInput, null>, res: Response) => {
     try {
         const {tipo} = _req.params;
-        const datosUsuario: UsuarioType = _req.body;
+        console.log(tipo)
+        const datosUsuario: CrearUsuarioInput = _req.body;
+        datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña)
         if (!tipo) {
             return res.status(400).json({ error: "Falta parámetro 'tipo' en la ruta" });
         }
@@ -59,5 +61,22 @@ export const editarUsuarioController = async(_req: Request<{ id: string }, any, 
     } catch (error) {
         console.error("Error al editar usuario:", error);
         return res.status(500).json({ error: "Error interno del servidor al editar el usuario" });
+    }
+}
+
+export const usuarioLogin = async(_req: Request<null,null,LoginInput>, res: Response) => {
+    try{
+        const loginData = _req.body
+        const usuario = await obtenerUsuarioPorEmail(loginData.mail)
+        if(!usuario){res.status(404).json({error: 'Usuario no encontrado'})}
+        const verifica = await verifyPassword(loginData.contraseña, usuario.contraseña)
+        if (verifica === true) {
+            console.log({loginData})
+            res.status(200).json({usuario})
+        }else{
+            throw new Error('Contraseña incorrecta')
+        }
+    }catch (error: any) {
+        res.status(401).json({error: error.message})
     }
 }
