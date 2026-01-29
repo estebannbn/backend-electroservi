@@ -13,4 +13,5 @@ router.get('/', obtenerUsuariosController);
 router.post('/:tipo', validateSchema(UsuarioSchema), crearUsuarioController);
 router.put('/:id', validateSchema(UsuarioSchema), editarUsuarioController);
 router.post('/', usuarioLogin);
+
 export default router;
