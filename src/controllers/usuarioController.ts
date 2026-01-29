@@ -14,6 +14,7 @@ import {TipoUsuario, CrearUsuarioInput, LoginInput} from "../Interfaces/usuario"
 import {hashPassword, verifyPassword} from "../utils/contraseñaHandler";
 import { UsuarioType } from "../schema/usuarioSchema";
 
+
 // En plural, traer todos los usuarios
 // TODO: Agregar try catch
 export const obtenerUsuariosController = async(_req: Request<null,null,null,{tipo: TipoUsuario}>, res: Response) => {
@@ -22,11 +23,11 @@ export const obtenerUsuariosController = async(_req: Request<null,null,null,{tip
     res.json({usuarios});
 };
 
-export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, CrearUsuarioInput, null>, res: Response) => {
+export const crearUsuarioController = async(_req: Request<{ tipo: TipoUsuario }, null, UsuarioType, null>, res: Response) => {
     try {
         const {tipo} = _req.params;
         console.log(tipo)
-        const datosUsuario: CrearUsuarioInput = _req.body;
+        const datosUsuario: UsuarioType = _req.body;
         datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña)
         if (!tipo) {
             return res.status(400).json({ error: "Falta parámetro 'tipo' en la ruta" });
