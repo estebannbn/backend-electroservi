@@ -59,8 +59,8 @@ model Trabajo {
   id          Int       @id @default(autoincrement())
   fechaDesde  DateTime
   fechaHasta  DateTime?
-  tecnicoId   Int
-  tecnico     Tecnico   @relation(fields: [tecnicoId], references: [id])
+  tecnicoId   Int?
+  tecnico     Tecnico?   @relation(fields: [tecnicoId], references: [id])
 }
 
 model Servicio {
