@@ -1,10 +1,11 @@
 import {z} from "zod";
 import { PrismaClient } from '@prisma/client'
+
+
 const prisma = new PrismaClient()
 
 export const PagoSchema = z.object({
     monto: z.number('El monto es obligatorio'),
-    fecha: z.string('La fecha es obligatoria'),
     tecnicoId: z.number('El ID del técnico es obligatorio').int()
         .refine(async (tecnicoId) => {
             const tecnico = await prisma.tecnico.findUnique({where: {id: tecnicoId}})
