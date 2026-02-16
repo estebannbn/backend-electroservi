@@ -49,7 +49,7 @@ model Cliente {
 
 model Pago {
   id         Int      @id @default(autoincrement())
-  fechaPago  DateTime
+  fechaPago  DateTime @default(now())
   monto      Float
   tecnicoId  Int
   tecnico    Tecnico  @relation(fields: [tecnicoId], references: [id])
