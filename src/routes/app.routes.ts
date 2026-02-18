@@ -11,12 +11,12 @@ import pagoRoutes from "./pago.routes.js";
 
 const router = Router();
 
-router.use('/usuarios', usuarioRoutes);
+router.use('/usuario', usuarioRoutes);
 router.use('/electrodomestico', electrodomesticoRoutes);
 router.use('/servicio', servicioRoutes);
 router.use('/repuesto', repuestoRoutes);
 router.use('/material', materialRoutes);
 router.use('/trabajo', trabajoRoutes);
 router.use('/tipo-de-trabajo', tipoTrabajoRoutes);
-router .use ('/pago', pagoRoutes);
+router.use('/pago', pagoRoutes);
 export default router;
