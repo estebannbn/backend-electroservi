@@ -126,7 +126,6 @@ model Repuesto {
   id                Int              @id @default(autoincrement())
   nombre            String           @unique
   cantidadActual    Int
-  cantidadAlerta    Int
   precioVentaActual Float
   precios           PrecioRepuesto[]
   items             ItemDeRepuesto[]
