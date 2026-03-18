@@ -124,8 +124,7 @@ model ItemDeRepuesto {
 
 model Repuesto {
   id                Int              @id @default(autoincrement())
-  codigo            String
-  nombre            String
+  nombre            String           @unique
   cantidadActual    Int
   cantidadAlerta    Int
   precioVentaActual Float
