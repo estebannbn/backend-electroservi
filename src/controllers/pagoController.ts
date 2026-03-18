@@ -3,8 +3,8 @@ import { obtenerPago, crearPago } from "../services/pagoService.js";
 import { PagoType } from "../schema/pagoSchema.js";
 
 
-export const obtenerPagoController = async(_req: Request, res: Response) => {
-    const pago = await  obtenerPago();
+export const obtenerPagoController = async (_req: Request, res: Response) => {
+    const pago = await obtenerPago();
     res.json(pago);
 }
 
