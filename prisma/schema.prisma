@@ -105,21 +105,21 @@ model TipoTrabajo {
 }
 
 model ItemDeMaterial {
-  id                 Int      @id @default(autoincrement())
   cantidadDeMaterial Int
   servicioId         Int
   materialId         Int
   servicio           Servicio @relation(fields: [servicioId], references: [id])
   material           Material @relation(fields: [materialId], references: [id])
+  @@id([servicioId, materialId])
 }
 
 model ItemDeRepuesto {
-  id                 Int      @id @default(autoincrement())
   cantidadDeRepuesto Int
   servicioId         Int
   repuestoId         Int
   servicio           Servicio @relation(fields: [servicioId], references: [id])
   repuesto           Repuesto @relation(fields: [repuestoId], references: [id])
+  @@id([servicioId, repuestoId])
 }
 
 model Repuesto {
