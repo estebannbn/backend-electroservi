@@ -12,7 +12,7 @@ export const UsuarioSchema = z.object({
             return !user
         }, { message: 'El cuil ya está en uso' }),
     direccion: z.string('Dirección obligatoria'),
-    telefono: z.stringFormat('telefono', /^[0-9]{9}$/, 'telefono invalido'),
+    telefono: z.stringFormat('telefono', /^[0-9]{10}$/, 'El telefono debe tener 10 números exactos, sin el 0 ni el 15'),
     mail: z.email('mail invalido')
         .refine(async (mail) => {
             const user = await prisma.usuario.findUnique({ where: { mail } })
