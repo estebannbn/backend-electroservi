@@ -14,6 +14,7 @@ export const validateSchema = (schema: ZodObject<any>) => {
                         return { path: issue.path[0], message: issue.message };
                     })
                 });
+                return;
             }
             next();
         } catch (error) {
