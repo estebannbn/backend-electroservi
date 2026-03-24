@@ -3,14 +3,19 @@ import { ServicioType } from "../schema/servicioSchema";
 
 const prisma = new PrismaClient();
 
-export const obtenerServicio = async() => {
-    const servicio = await prisma.servicio.findMany();
+// Trae también los datos de electrodoméstico
+export const obtenerServicio = async (clienteId?: number) => {
+    const whereClause = clienteId ? { clienteId } : {};
+    const servicio = await prisma.servicio.findMany({
+        where: whereClause,
+        include: { electrodomestico: true }
+    });
     return servicio;
 }
 
-export const crearServicio = async(data: ServicioType) => {
+export const crearServicio = async (data: ServicioType) => {
     const { itemsMaterial, itemsRepuesto, ...restoDatos } = data;
-    
+
     const nuevoServicio = await prisma.servicio.create({
         data: {
             ...restoDatos,
