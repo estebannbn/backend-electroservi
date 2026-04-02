@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { obtenerPagoController } from "../controllers/pagoController.js";
-import { crearPagoController } from "../controllers/pagoController.js";
+import { obtenerPagoController, crearPagoController } from "../controllers/pagoController.js";
 import { validateSchema } from "../middlewares/validateSchema.js";
 import { PagoSchema } from "../schema/pagoSchema.js";
 

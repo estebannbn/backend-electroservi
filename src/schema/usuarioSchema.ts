@@ -26,3 +26,6 @@ export const UsuarioSchema = z.object({
 })
 
 export type UsuarioType = z.infer<typeof UsuarioSchema>
+
+export const EditarUsuarioSchema = UsuarioSchema.omit({ cuil: true, mail: true }).partial()
+export type EditarUsuarioType = z.infer<typeof EditarUsuarioSchema>

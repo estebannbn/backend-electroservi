@@ -55,10 +55,15 @@ export const crearUsuarioController = async (_req: Request<{ tipo: TipoUsuario }
     }
 }
 
-export const editarUsuarioController = async (_req: Request<{ id: number }, any, Partial<UsuarioType>, any>, res: Response) => {
+export const editarUsuarioController = async (_req: Request<{ id: string }, any, Partial<UsuarioType>, any>, res: Response) => {
     try {
-        const id = _req.params.id;
+        const id = Number(_req.params.id);
         const datosUsuario = _req.body;
+        
+        if (datosUsuario.contraseña) {
+            datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña);
+        }
+
         const usuarioActualizado = await editarUsuario(id, datosUsuario);
         res.json({ usuario: usuarioActualizado });
     } catch (error) {
