@@ -6,7 +6,7 @@ import {
     usuarioLogout, checkSession
 } from "../controllers/usuarioController";
 import { validateSchema } from "../middlewares/validateSchema";
-import { UsuarioSchema } from "../schema/usuarioSchema";
+import { UsuarioSchema, EditarUsuarioSchema } from "../schema/usuarioSchema";
 import checkAuthMiddleware from "../middlewares/checkAuthMiddleware";
 
 const router = Router();
@@ -18,7 +18,7 @@ router.post('/logout', usuarioLogout);
 
 router.get('/', obtenerUsuariosController);
 router.post('/:tipo', validateSchema(UsuarioSchema), crearUsuarioController); // salen subrayado en rojo, pero funcionan
-router.put('/:id', validateSchema(UsuarioSchema), editarUsuarioController);
+router.put('/:id', validateSchema(EditarUsuarioSchema), editarUsuarioController);
 
 router.get('/auth', checkAuthMiddleware, checkSession); // verificar si el usuario está logueado
 
