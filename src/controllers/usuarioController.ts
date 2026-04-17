@@ -59,7 +59,7 @@ export const editarUsuarioController = async (_req: Request<{ id: string }, any,
     try {
         const id = Number(_req.params.id);
         const datosUsuario = _req.body;
-        
+
         if (datosUsuario.contraseña) {
             datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña);
         }
@@ -76,7 +76,10 @@ export const usuarioLogin = async (_req: Request<null, null, LoginInput>, res: R
     try {
         const loginData = _req.body
         const usuario = await obtenerUsuarioPorEmail(loginData.mail)
-        if (!usuario) { res.status(404).json({ error: 'Usuario no encontrado' }) }
+        if (!usuario) {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+            return;
+        }
         const verifica = await verifyPassword(loginData.contraseña, usuario.contraseña)
         if (verifica === true) {
             // necesitaremos el tipo de usuario en el token para algunas funciones en el front
@@ -110,6 +113,9 @@ export const usuarioLogout = async (_req: Request, res: Response) => {
 // Verificar si el usuario esta logueado
 export const checkSession = async (_req: Request, res: Response) => {
     const { user } = _req
-    if (!user) res.status(401).json({ error: 'No autorizado' })
+    if (!user) {
+        res.status(401).json({ error: 'No autorizado' });
+        return;
+    }
     res.json({ user })
 }
