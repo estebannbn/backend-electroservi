@@ -18,6 +18,7 @@ export interface LoginInput {
 
 export interface DecodedToken {
   id: number;
+  nombre: string;
   mail: string;
   tipo: TipoUsuario;
 }
