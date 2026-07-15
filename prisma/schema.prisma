@@ -43,7 +43,6 @@ model Administrador {
 model Cliente {
   id                Int                @id
   servicios         Servicio[]
-  electrodomesticos Electrodomestico[]
   usuario           Usuario            @relation(fields: [id], references: [id])
 }
 
@@ -90,8 +89,6 @@ model Electrodomestico {
   tipo      tipoElectrodomestico
   modelo    String
   marca     String
-  clienteId Int
-  cliente   Cliente              @relation(fields: [clienteId], references: [id])
   servicios Servicio[]
 }
 
@@ -164,6 +161,7 @@ enum estadoTecnico {
 
 enum estadoServicio {
   PENDIENTE
+  DIAGNOSTICADO
   EN_REPARACION
   REPARADO
   PAGADO

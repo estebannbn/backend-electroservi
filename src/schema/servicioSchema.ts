@@ -2,7 +2,10 @@ import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
 import { ItemDeMaterialSchema } from './itemDeMaterialSchema'
 import { ItemDeRepuestoSchema } from './itemDeRepuestoSchema'
+import { ElectrodomesticoSchema } from './electrodomesticoSchema'
 const prisma = new PrismaClient()
+
+const ElectrodomesticoNestedSchema = ElectrodomesticoSchema.omit({ clienteId: true })
 
 export const ServicioSchema = z.object({
     fechaLlegadaEstimada: z.date("Ingrese una fecha de llegada estimada").optional(),
@@ -30,11 +33,16 @@ export const ServicioSchema = z.object({
     electrodomesticoId: z.number().int().refine(async (electrodomesticoId) => {
         const electrodomestico = await prisma.electrodomestico.findUnique({ where: { id: electrodomesticoId } })
         return electrodomestico
-    }, { message: 'El electrodoméstico no existe' }),
+    }, { message: 'El electrodoméstico no existe' }).optional(),
+
+    electrodomestico: ElectrodomesticoNestedSchema.optional(),
 
     itemsMaterial: z.array(ItemDeMaterialSchema.omit({ servicioId: true })).optional(),
 
     itemsRepuesto: z.array(ItemDeRepuestoSchema.omit({ servicioId: true })).optional()
+}).refine((data) => data.electrodomesticoId || data.electrodomestico, {
+    message: 'Debe proporcionar electrodomesticoId o electrodomestico',
+    path: ['electrodomesticoId'],
 })
 
 export type ServicioType = z.infer<typeof ServicioSchema>
