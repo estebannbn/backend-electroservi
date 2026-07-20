@@ -5,7 +5,13 @@ import { ServicioType } from "../schema/servicioSchema.js";
 // Trae los servicios por cliente
 // Podria ser modificado si los CU lo requieren
 export const obtenerServicioController = async (_req: Request, res: Response) => {
-    const clienteId = _req.query.clienteId ? parseInt(_req.query.clienteId as string) : undefined;
+    let clienteId = _req.query.clienteId ? parseInt(_req.query.clienteId as string) : undefined;
+    
+    // Si no se provee por query y hay un usuario logueado, asumimos que quiere ver sus propios servicios
+    if (!clienteId && (_req as any).user && (_req as any).user.id) {
+        clienteId = (_req as any).user.id;
+    }
+
     const servicio = await obtenerServicio(clienteId);
     res.json(servicio);
 }
@@ -15,6 +21,7 @@ export const crearServicioController = async (_req: Request<null, null, Servicio
         const servicio = await crearServicio(_req.body);
         res.status(201).json(servicio);
     } catch (error) {
+        console.error("Error en crearServicioController:", error);
         res.status(500).json({ error: 'Error al crear el servicio' });
     }
 }

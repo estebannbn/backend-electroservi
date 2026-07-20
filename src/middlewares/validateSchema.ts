@@ -16,6 +16,7 @@ export const validateSchema = (schema: ZodObject<any> | ZodType<any>) => {
                 });
                 return;
             }
+            req.body = validation.data;
             next();
         } catch (error) {
             if (error instanceof ZodError) {

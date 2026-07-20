@@ -5,5 +5,5 @@ export const repuestoSchema = z.object({
     cantidadActual: z.number().min(1, "La cantidad actual es requerida y debe ser 1 como minimo"),
     precioVentaActual: z.number("El precio de venta actual es requerido"),
 })
-    
+
 export type RepuestoType = z.infer<typeof repuestoSchema>;

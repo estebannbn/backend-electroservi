@@ -92,7 +92,7 @@ export const usuarioLogin = async (_req: Request<null, null, LoginInput>, res: R
                     maxAge: 60 * 60 * 1000 // 1 hora
                 }
             )
-            res.status(200).json({ message: 'Login exitoso' })
+            res.status(200).json({ message: 'Login exitoso', tipo })
         } else {
             throw new Error('Contraseña incorrecta')
         }
