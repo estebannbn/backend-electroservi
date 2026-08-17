@@ -3,6 +3,7 @@
 // TODO: Mejorar el sistema de validacion con Zod ?
 
 import { Request, Response } from "express";
+import { Prisma } from '@prisma/client';
 import {
     obtenerUsuarios,
     crearTecnico,
@@ -97,6 +98,10 @@ export const usuarioLogin = async (_req: Request<null, null, LoginInput>, res: R
             throw new Error('Contraseña incorrecta')
         }
     } catch (error: any) {
+        // Si la base de datos no está disponible, devolver un mensaje genérico al cliente
+        if (error?.code === 'P1001' || error instanceof Prisma.PrismaClientInitializationError) {
+            return res.status(503).json({ error: 'Servicio temporalmente no disponible. Inténtalo más tarde.' });
+        }
         res.status(401).json({ error: error.message })
     }
 }
