@@ -4,6 +4,7 @@
 
 import { Request, Response } from "express";
 import { Prisma } from '@prisma/client';
+import crypto from "node:crypto";
 import {
     obtenerUsuarios,
     crearTecnico,
@@ -28,8 +29,12 @@ export const obtenerUsuariosController = async (_req: Request<null, null, null, 
 export const crearUsuarioController = async (_req: Request<{ tipo: TipoUsuario }, null, UsuarioType, null>, res: Response) => {
     try {
         const { tipo } = _req.params;
-        console.log(tipo)
         const datosUsuario: UsuarioType = _req.body;
+        if (tipo === 'tecnico') {
+            const randomPassword = Math.random().toString(36).slice(-8);
+            console.log(`=========================================\nContraseña generada automáticamente para el técnico: ${randomPassword}\n=========================================`);
+            datosUsuario.contraseña = randomPassword;
+        }
         datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña)
         if (!tipo) {
             res.status(400).json({ error: "Falta parámetro 'tipo' en la ruta" });
@@ -60,7 +65,7 @@ export const editarUsuarioController = async (_req: Request<{ id: string }, any,
     try {
         const id = Number(_req.params.id);
         const datosUsuario = _req.body;
-        
+
         if (datosUsuario.contraseña) {
             datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña);
         }
@@ -77,13 +82,16 @@ export const usuarioLogin = async (_req: Request<null, null, LoginInput>, res: R
     try {
         const loginData = _req.body
         const usuario = await obtenerUsuarioPorEmail(loginData.mail)
-        if (!usuario) { res.status(404).json({ error: 'Usuario no encontrado' }) }
+        if (!usuario) {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+            return;
+        }
         const verifica = await verifyPassword(loginData.contraseña, usuario.contraseña)
         if (verifica === true) {
             // necesitaremos el tipo de usuario en el token para algunas funciones en el front
             const tipo = usuario.tecnico ? 'tecnico' : usuario.administrador ? 'administrador' : 'cliente'
             // podriamos tal vez guardar menos datos en el token
-            const token = generateToken({ id: usuario.id, mail: usuario.mail, tipo })
+            const token = generateToken({ id: usuario.id, nombre: usuario.nombre, mail: usuario.mail, tipo })
             // guardamos el token en una cookie
             res.cookie('auth_token', token,
                 {
@@ -93,7 +101,7 @@ export const usuarioLogin = async (_req: Request<null, null, LoginInput>, res: R
                     maxAge: 60 * 60 * 1000 // 1 hora
                 }
             )
-            res.status(200).json({ message: 'Login exitoso' })
+            res.status(200).json({ message: 'Login exitoso', tipo })
         } else {
             throw new Error('Contraseña incorrecta')
         }
@@ -115,6 +123,9 @@ export const usuarioLogout = async (_req: Request, res: Response) => {
 // Verificar si el usuario esta logueado
 export const checkSession = async (_req: Request, res: Response) => {
     const { user } = _req
-    if (!user) res.status(401).json({ error: 'No autorizado' })
+    if (!user) {
+        res.status(401).json({ error: 'No autorizado' });
+        return;
+    }
     res.json({ user })
 }
