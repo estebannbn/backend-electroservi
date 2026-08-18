@@ -14,11 +14,14 @@ export const obtenerServicio = async (clienteId?: number) => {
 }
 
 export const crearServicio = async (data: ServicioType) => {
-    const { itemsMaterial, itemsRepuesto, ...restoDatos } = data;
+    const { itemsMaterial, itemsRepuesto, electrodomestico, ...restoDatos } = data;
 
     const nuevoServicio = await prisma.servicio.create({
         data: {
             ...restoDatos,
+            electrodomestico: electrodomestico
+                ? { create: electrodomestico }
+                : undefined,
             itemsMaterial: itemsMaterial && itemsMaterial.length > 0 ? {
                 createMany: { data: itemsMaterial }
             } : undefined,
