@@ -14,21 +14,19 @@ export const obtenerServicio = async (clienteId?: number) => {
 }
 
 export const crearServicio = async (data: ServicioType) => {
-    const { itemsMaterial, itemsRepuesto, electrodomestico, ...restoDatos } = data;
+    const { itemsMaterial, itemsRepuesto, electrodomestico, clienteId, tecnicoId, tipoTrabajoId, electrodomesticoId, ...restoDatos } = data;
 
     const nuevoServicio = await prisma.servicio.create({
         data: {
             ...restoDatos,
-            electrodomestico: electrodomestico
-                ? { create: electrodomestico }
-                : undefined,
-            itemsMaterial: itemsMaterial && itemsMaterial.length > 0 ? {
-                createMany: { data: itemsMaterial }
-            } : undefined,
-            itemsRepuesto: itemsRepuesto && itemsRepuesto.length > 0 ? {
-                createMany: { data: itemsRepuesto }
-            } : undefined
-        } as Prisma.ServicioUncheckedCreateInput
+            cliente: { connect: { id: clienteId } },
+            ...(tecnicoId ? { tecnico: { connect: { id: tecnicoId } } } : {}),
+            ...(tipoTrabajoId ? { tipoTrabajo: { connect: { id: tipoTrabajoId } } } : {}),
+            ...(electrodomestico ? { electrodomestico: { create: electrodomestico } } : {}),
+            ...(electrodomesticoId && !electrodomestico ? { electrodomestico: { connect: { id: electrodomesticoId } } } : {}),
+            ...(itemsMaterial && itemsMaterial.length > 0 ? { itemsMaterial: { createMany: { data: itemsMaterial } } } : {}),
+            ...(itemsRepuesto && itemsRepuesto.length > 0 ? { itemsRepuesto: { createMany: { data: itemsRepuesto } } } : {})
+        }
     });
     return nuevoServicio;
 }
