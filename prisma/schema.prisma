@@ -41,9 +41,9 @@ model Administrador {
 }
 
 model Cliente {
-  id                Int                @id
-  servicios         Servicio[]
-  usuario           Usuario            @relation(fields: [id], references: [id])
+  id        Int        @id
+  servicios Servicio[]
+  usuario   Usuario    @relation(fields: [id], references: [id])
 }
 
 model Pago {
@@ -107,6 +107,7 @@ model ItemDeMaterial {
   materialId         Int
   servicio           Servicio @relation(fields: [servicioId], references: [id])
   material           Material @relation(fields: [materialId], references: [id])
+
   @@id([servicioId, materialId])
 }
 
@@ -116,6 +117,7 @@ model ItemDeRepuesto {
   repuestoId         Int
   servicio           Servicio @relation(fields: [servicioId], references: [id])
   repuesto           Repuesto @relation(fields: [repuestoId], references: [id])
+
   @@id([servicioId, repuestoId])
 }
 
