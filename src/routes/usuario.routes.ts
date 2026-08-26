@@ -6,7 +6,7 @@ import {
     usuarioLogout, checkSession
 } from "../controllers/usuarioController";
 import { validateSchema } from "../middlewares/validateSchema";
-import { UsuarioSchema, EditarUsuarioSchema } from "../schema/usuarioSchema";
+import { getUsuarioSchema, EditarUsuarioSchema } from "../schema/usuarioSchema";
 import checkAuthMiddleware from "../middlewares/checkAuthMiddleware";
 
 const router = Router();
@@ -19,10 +19,10 @@ router.post('/logout', usuarioLogout);
 router.get('/', obtenerUsuariosController);
 router.post('/:tipo', (req, res, next) => {
     if (req.params.tipo === 'tecnico') {
-        const schema = UsuarioSchema.omit({ contraseña: true });
+        const schema = getUsuarioSchema('tecnico').omit({ contraseña: true });
         validateSchema(schema)(req, res, next);
     } else {
-        validateSchema(UsuarioSchema)(req, res, next);
+        validateSchema(getUsuarioSchema(req.params.tipo))(req, res, next);
     }
 }, crearUsuarioController);
 
