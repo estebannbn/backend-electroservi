@@ -16,7 +16,7 @@ model Usuario {
   id            Int            @id @default(autoincrement())
   nombre        String
   apellido      String
-  cuil          String         @unique
+  cuil          String
   telefono      String
   direccion     String
   mail          String         @unique

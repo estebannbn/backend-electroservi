@@ -16,6 +16,7 @@ import { LoginInput, TipoUsuario } from "../Interfaces/usuario";
 import { hashPassword, verifyPassword } from "../utils/contraseñaHandler";
 import { UsuarioType } from "../schema/usuarioSchema";
 import { generateToken } from "../utils/authHandler";
+import { enviarCredencialesTecnico } from "../utils/mailHandler";
 
 
 // En plural, traer todos los usuarios
@@ -30,10 +31,11 @@ export const crearUsuarioController = async (_req: Request<{ tipo: TipoUsuario }
     try {
         const { tipo } = _req.params;
         const datosUsuario: UsuarioType = _req.body;
+        let plainPassword = "";
         if (tipo === 'tecnico') {
-            const randomPassword = Math.random().toString(36).slice(-8);
-            console.log(`=========================================\nContraseña generada automáticamente para el técnico: ${randomPassword}\n=========================================`);
-            datosUsuario.contraseña = randomPassword;
+            plainPassword = Math.random().toString(36).slice(-8);
+            console.log(`=========================================\nContraseña generada automáticamente para el técnico: ${plainPassword}\n=========================================`);
+            datosUsuario.contraseña = plainPassword;
         }
         datosUsuario.contraseña = await hashPassword(datosUsuario.contraseña)
         if (!tipo) {
@@ -43,6 +45,10 @@ export const crearUsuarioController = async (_req: Request<{ tipo: TipoUsuario }
         let usuario;
         if (tipo === "tecnico") {
             usuario = await crearTecnico(datosUsuario);
+            // Enviamos el correo con la contraseña generada
+            if (datosUsuario.mail && plainPassword) {
+                await enviarCredencialesTecnico(datosUsuario.mail, plainPassword);
+            }
         } else if (tipo === "cliente") {
             usuario = await crearCliente(datosUsuario);
         } else if (tipo === "administrador") {
