@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { obtenerRepuesto, crearRepuesto } from "../services/repuestoService.js";
 import { RepuestoType } from "../schema/repuestoSchema.js";
 
-export const obtenerRepuestoController = async(_req: Request, res: Response) => {
-    const repuesto = await  obtenerRepuesto();
+export const obtenerRepuestoController = async (_req: Request, res: Response) => {
+    const repuesto = await obtenerRepuesto();
     res.json(repuesto);
 }
 
