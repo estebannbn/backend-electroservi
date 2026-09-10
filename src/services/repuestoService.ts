@@ -17,3 +17,17 @@ export const crearRepuesto = async (data: RepuestoType) => {
         throw new Error("Error al crear el repuesto");
     }
 }
+
+export const editarRepuesto = async (id: number, data: Partial<RepuestoType>) => {
+    try {
+        const repuesto = await prisma.repuesto.update({
+            where: { id },
+            data,
+        });
+        return repuesto;
+    }
+    catch (error) {
+        console.log(error);
+        throw new Error("Error al editar el repuesto");
+    }
+}
