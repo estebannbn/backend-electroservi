@@ -6,7 +6,8 @@ import { ServicioType } from "../schema/servicioSchema.js";
 // Podria ser modificado si los CU lo requieren
 export const obtenerServicioController = async (_req: Request, res: Response) => {
     const clienteId = _req.query.clienteId ? parseInt(_req.query.clienteId as string) : undefined;
-    const servicio = await obtenerServicio(clienteId);
+    const tecnicoId = _req.query.tecnicoId ? parseInt(_req.query.tecnicoId as string) : undefined;
+    const servicio = await obtenerServicio(clienteId, tecnicoId);
     res.json(servicio);
 }
 
