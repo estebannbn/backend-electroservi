@@ -4,8 +4,10 @@ import { ServicioType } from "../schema/servicioSchema";
 const prisma = new PrismaClient();
 
 // Trae también los datos de electrodoméstico
-export const obtenerServicio = async (clienteId?: number) => {
-    const whereClause = clienteId ? { clienteId } : {};
+export const obtenerServicio = async (clienteId?: number, tecnicoId?: number) => {
+    const whereClause: any = {};
+    if (clienteId) whereClause.clienteId = clienteId;
+    if (tecnicoId) whereClause.tecnicoId = tecnicoId;
     const servicio = await prisma.servicio.findMany({
         where: whereClause,
         include: { electrodomestico: true }
@@ -14,7 +16,21 @@ export const obtenerServicio = async (clienteId?: number) => {
 }
 
 export const crearServicio = async (data: ServicioType) => {
-    const { itemsMaterial, itemsRepuesto, electrodomestico, clienteId, tecnicoId, tipoTrabajoId, electrodomesticoId, ...restoDatos } = data;
+    let { itemsMaterial, itemsRepuesto, electrodomestico, clienteId, tecnicoId, tipoTrabajoId, electrodomesticoId, ...restoDatos } = data;
+
+    if (!tecnicoId) {
+        const tecnicoDisponible = await prisma.tecnico.findFirst({
+            where: { estado: 'DISPONIBLE' }
+        });
+
+        if (tecnicoDisponible) {
+            tecnicoId = tecnicoDisponible.id;
+            await prisma.tecnico.update({
+                where: { id: tecnicoId },
+                data: { estado: 'OCUPADO' }
+            });
+        }
+    }
 
     const nuevoServicio = await prisma.servicio.create({
         data: {
