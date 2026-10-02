@@ -7,7 +7,8 @@ import materialRoutes from "./material.routes.js";
 import trabajoRoutes from "./trabajo.routes.js";
 import tipoTrabajoRoutes from "./tipoTrabajo.routes.js";
 import pagoRoutes from "./pago.routes.js";
-
+import itemRepuestoRoutes from "./itemrepuesto.routes.js";
+import itemMaterialRoutes from "./itemmaterial.routes.js";
 
 const router = Router();
 
@@ -19,4 +20,7 @@ router.use('/material', materialRoutes);
 router.use('/trabajo', trabajoRoutes);
 router.use('/tipo-de-trabajo', tipoTrabajoRoutes);
 router.use('/pago', pagoRoutes);
+router.use('/item-repuesto', itemRepuestoRoutes);
+router.use('/item-material', itemMaterialRoutes);
+
 export default router;

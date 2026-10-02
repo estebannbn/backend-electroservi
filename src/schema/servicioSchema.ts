@@ -8,18 +8,13 @@ const prisma = new PrismaClient()
 const ElectrodomesticoNestedSchema = ElectrodomesticoSchema.omit({ clienteId: true })
 
 export const ServicioSchema = z.object({
-    fechaLlegadaEstimada: z.coerce.date({ message: "Ingrese una fecha de llegada estimada" }).optional(),
+    fechaLlegadaEstimada: z.coerce.date({ message: "Ingrese una fecha de llegada estimada" }),
     fechaLlegadaReal: z.coerce.date({ message: "Ingrese una fecha de llegada real" }).optional(),
     fechaDiagnostico: z.coerce.date({ message: "Ingrese una fecha de diagnóstico" }).optional(),
     fechaReparacion: z.coerce.date({ message: "Ingrese una fecha de reparación" }).optional(),
     fechaRetiro: z.coerce.date({ message: "Ingrese una fecha de retiro" }).optional(),
     fechaFin: z.coerce.date({ message: "Ingrese una fecha de finalización" }).optional(),
     comentario: z.string().optional(),
-    tecnicoId: z.number().int().refine(async (tecnicoId) => {
-        const tecnico = await prisma.tecnico.findUnique({ where: { id: tecnicoId } })
-        return tecnico
-    }, { message: 'El técnico no existe' }).optional(),
-
     clienteId: z.number().int().refine(async (clienteId) => {
         const cliente = await prisma.cliente.findUnique({ where: { id: clienteId } })
         return cliente
