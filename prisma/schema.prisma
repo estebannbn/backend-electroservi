@@ -32,7 +32,6 @@ model Tecnico {
   usuario   Usuario       @relation(fields: [id], references: [id])
   trabajos  Trabajo[]
   pagos     Pago[]
-  servicios Servicio[]
 }
 
 model Administrador {
@@ -60,6 +59,8 @@ model Trabajo {
   fechaHasta DateTime?
   tecnicoId  Int?
   tecnico    Tecnico?  @relation(fields: [tecnicoId], references: [id])
+  servicioId Int
+  servicio   Servicio  @relation(fields: [servicioId], references: [id])
 }
 
 model Servicio {
@@ -72,16 +73,15 @@ model Servicio {
   fechaRetiro          DateTime?
   fechaFin             DateTime?
   comentario           String?
-  tecnicoId            Int?
   clienteId            Int
   tipoTrabajoId        Int?
   electrodomesticoId   Int
-  tecnico              Tecnico?         @relation(fields: [tecnicoId], references: [id])
   cliente              Cliente          @relation(fields: [clienteId], references: [id])
   tipoTrabajo          TipoTrabajo?     @relation(fields: [tipoTrabajoId], references: [id])
   electrodomestico     Electrodomestico @relation(fields: [electrodomesticoId], references: [id])
   itemsMaterial        ItemDeMaterial[]
   itemsRepuesto        ItemDeRepuesto[]
+  trabajos             Trabajo[]
 }
 
 model Electrodomestico {

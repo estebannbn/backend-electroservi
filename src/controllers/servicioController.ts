@@ -7,7 +7,9 @@ import { ServicioType } from "../schema/servicioSchema.js";
 export const obtenerServicioController = async (_req: Request, res: Response) => {
     const clienteId = _req.query.clienteId ? parseInt(_req.query.clienteId as string) : undefined;
     const tecnicoId = _req.query.tecnicoId ? parseInt(_req.query.tecnicoId as string) : undefined;
-    const servicio = await obtenerServicio(clienteId, tecnicoId);
+    const id = _req.query.id ? parseInt(_req.query.id as string) : undefined;
+    const tecnicoEmail = _req.query.tecnicoEmail as string | undefined;
+    const servicio = await obtenerServicio(clienteId, tecnicoId, id, tecnicoEmail);
     res.json(servicio);
 }
 
