@@ -10,7 +10,7 @@ import {
     crearTecnico,
     crearCliente,
     crearAdministrador,
-    editarUsuario, obtenerUsuarioPorEmail
+    editarUsuario, obtenerPerfilUsuario, obtenerUsuarioPorEmail
 } from "../services/usuarioService";
 import { LoginInput, TipoUsuario } from "../Interfaces/usuario";
 import { hashPassword, verifyPassword } from "../utils/contraseñaHandler";
@@ -107,7 +107,7 @@ export const usuarioLogin = async (_req: Request<null, null, LoginInput>, res: R
                     maxAge: 60 * 60 * 1000 // 1 hora
                 }
             )
-            res.status(200).json({ message: 'Login exitoso', tipo })
+            res.status(200).json({ message: 'Login exitoso', tipo, nombre: usuario.nombre })
         } else {
             throw new Error('Contraseña incorrecta')
         }
@@ -133,5 +133,10 @@ export const checkSession = async (_req: Request, res: Response) => {
         res.status(401).json({ error: 'No autorizado' });
         return;
     }
-    res.json({ user })
+    const perfil = await obtenerPerfilUsuario(user.id)
+    if (!perfil) {
+        res.status(404).json({ error: 'Usuario no encontrado' });
+        return;
+    }
+    res.json({ user: { ...perfil, tipo: user.tipo } })
 }

@@ -7,7 +7,10 @@ const prisma = new PrismaClient();
 export const obtenerServicio = async (clienteId?: number, tecnicoId?: number, id?: number, tecnicoEmail?: string) => {
     const whereClause: any = {};
     if (clienteId) whereClause.clienteId = clienteId;
-    if (tecnicoId) whereClause.trabajos = { some: { tecnicoId: tecnicoId } };
+    if (tecnicoId) {
+        whereClause.trabajos = { some: { tecnicoId, fechaHasta: null } };
+        whereClause.estado = { notIn: ['REPARADO', 'PAGADO', 'ENTREGADO', 'CANCELADO'] };
+    }
     if (id) whereClause.id = id;
     if (tecnicoEmail) {
         whereClause.trabajos = {
@@ -89,4 +92,52 @@ export const crearServicio = async (data: ServicioType) => {
         }
     });
     return nuevoServicio;
+}
+
+export const finalizarServicio = async (servicioId: number, tecnicoId: number, comentario?: string) => {
+    return prisma.$transaction(async (transaction) => {
+        const trabajoActivo = await transaction.trabajo.findFirst({
+            where: { servicioId, tecnicoId, fechaHasta: null },
+            select: { id: true }
+        });
+
+        if (!trabajoActivo) {
+            return null;
+        }
+
+        const fechaFin = new Date();
+        await transaction.trabajo.update({
+            where: { id: trabajoActivo.id },
+            data: { fechaHasta: fechaFin }
+        });
+
+        const servicioActualizado = await transaction.servicio.update({
+            where: { id: servicioId },
+            data: {
+                estado: 'REPARADO',
+                fechaReparacion: fechaFin,
+                fechaFin,
+                ...(comentario ? { comentario } : {})
+            }
+        });
+
+        const trabajosRestantes = await transaction.trabajo.count({
+            where: {
+                tecnicoId,
+                fechaHasta: null,
+                servicio: {
+                    estado: { notIn: ['REPARADO', 'PAGADO', 'ENTREGADO', 'CANCELADO'] }
+                }
+            }
+        });
+
+        if (trabajosRestantes === 0) {
+            await transaction.tecnico.update({
+                where: { id: tecnicoId },
+                data: { estado: 'DISPONIBLE' }
+            });
+        }
+
+        return servicioActualizado;
+    });
 }
