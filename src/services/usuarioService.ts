@@ -99,3 +99,17 @@ export const obtenerUsuarioPorEmail = async (mail: string) => {
     return await prisma.usuario.findUnique({ where: { mail }, include: { tecnico: true, administrador: true, cliente: true } })
 }
 
+export const obtenerPerfilUsuario = async (id: number) => {
+    return await prisma.usuario.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            nombre: true,
+            apellido: true,
+            direccion: true,
+            telefono: true,
+            mail: true
+        }
+    })
+}
+
