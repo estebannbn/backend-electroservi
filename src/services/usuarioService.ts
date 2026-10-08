@@ -113,3 +113,10 @@ export const obtenerPerfilUsuario = async (id: number) => {
     })
 }
 
+export const cambiarEstadoTecnico = async (id: number, estado: 'DISPONIBLE' | 'DESHABILITADO') => {
+    return await prisma.tecnico.update({
+        where: { id },
+        data: { estado }
+    });
+}
+
