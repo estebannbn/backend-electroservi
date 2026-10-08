@@ -3,7 +3,7 @@ import {
     crearUsuarioController,
     editarUsuarioController,
     obtenerUsuariosController, usuarioLogin,
-    usuarioLogout, checkSession
+    usuarioLogout, checkSession, cambiarEstadoTecnicoController
 } from "../controllers/usuarioController";
 import { validateSchema } from "../middlewares/validateSchema";
 import { getUsuarioSchema, EditarUsuarioSchema } from "../schema/usuarioSchema";
@@ -27,6 +27,8 @@ router.post('/:tipo', (req, res, next) => {
 }, crearUsuarioController);
 
 router.put('/:id', validateSchema(EditarUsuarioSchema), editarUsuarioController);
+
+router.patch('/tecnico/:id/estado', cambiarEstadoTecnicoController);
 
 router.get('/auth', checkAuthMiddleware, checkSession); // verificar si el usuario está logueado
 

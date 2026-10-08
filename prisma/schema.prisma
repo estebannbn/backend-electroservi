@@ -27,11 +27,11 @@ model Usuario {
 }
 
 model Tecnico {
-  id        Int           @id
-  estado    estadoTecnico @default(DISPONIBLE)
-  usuario   Usuario       @relation(fields: [id], references: [id])
-  trabajos  Trabajo[]
-  pagos     Pago[]
+  id       Int           @id
+  estado   estadoTecnico @default(DISPONIBLE)
+  usuario  Usuario       @relation(fields: [id], references: [id])
+  trabajos Trabajo[]
+  pagos    Pago[]
 }
 
 model Administrador {
@@ -158,7 +158,7 @@ model PrecioMaterial {
 
 enum estadoTecnico {
   DISPONIBLE
-  OCUPADO
+  DESHABILITADO
 }
 
 enum estadoServicio {

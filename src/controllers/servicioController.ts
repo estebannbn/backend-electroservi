@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { crearServicio, finalizarServicio, obtenerServicio } from "../services/servicioService.js";
+import { crearServicio, finalizarServicio, obtenerServicio, cambiarEstadoServicio } from "../services/servicioService.js";
 import { ServicioType } from "../schema/servicioSchema.js";
 
 // Trae los servicios por cliente
@@ -48,5 +48,25 @@ export const finalizarServicioController = async (
     } catch (error) {
         console.error('Error al finalizar servicio:', error);
         return res.status(500).json({ error: 'No se pudo finalizar el servicio' });
+    }
+}
+
+export const cambiarEstadoServicioController = async (req: Request, res: Response) => {
+    const servicioId = Number(req.params.id);
+    const { estado } = req.body;
+    
+    if (!Number.isInteger(servicioId) || servicioId <= 0) {
+        return res.status(400).json({ error: 'ID de servicio inválido' });
+    }
+    if (!estado) {
+        return res.status(400).json({ error: 'Estado es requerido' });
+    }
+    
+    try {
+        const servicio = await cambiarEstadoServicio(servicioId, estado);
+        return res.json({ servicio });
+    } catch (error) {
+        console.error('Error al cambiar estado de servicio:', error);
+        return res.status(500).json({ error: 'No se pudo cambiar el estado del servicio' });
     }
 }

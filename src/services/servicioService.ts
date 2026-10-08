@@ -26,6 +26,7 @@ export const obtenerServicio = async (clienteId?: number, tecnicoId?: number, id
     const servicio = await prisma.servicio.findMany({
         where: whereClause,
         include: {
+            tipoTrabajo: true,
             electrodomestico: true,
             trabajos: {
                 include: {
@@ -61,10 +62,6 @@ export const crearServicio = async (data: ServicioType) => {
 
     if (tecnicoDisponible) {
         tecnicoId = tecnicoDisponible.id;
-        await prisma.tecnico.update({
-            where: { id: tecnicoId },
-            data: { estado: 'OCUPADO' }
-        });
     }
 
     const nuevoServicio = await prisma.servicio.create({
@@ -114,7 +111,7 @@ export const finalizarServicio = async (servicioId: number, tecnicoId: number, c
         const servicioActualizado = await transaction.servicio.update({
             where: { id: servicioId },
             data: {
-                estado: 'REPARADO',
+                estado: 'DIAGNOSTICADO',
                 fechaReparacion: fechaFin,
                 fechaFin,
                 ...(comentario ? { comentario } : {})
@@ -139,5 +136,12 @@ export const finalizarServicio = async (servicioId: number, tecnicoId: number, c
         }
 
         return servicioActualizado;
+    });
+}
+
+export const cambiarEstadoServicio = async (servicioId: number, estado: any) => {
+    return await prisma.servicio.update({
+        where: { id: servicioId },
+        data: { estado }
     });
 }

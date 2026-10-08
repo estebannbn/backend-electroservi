@@ -10,7 +10,7 @@ import {
     crearTecnico,
     crearCliente,
     crearAdministrador,
-    editarUsuario, obtenerPerfilUsuario, obtenerUsuarioPorEmail
+    editarUsuario, obtenerPerfilUsuario, obtenerUsuarioPorEmail, cambiarEstadoTecnico
 } from "../services/usuarioService";
 import { LoginInput, TipoUsuario } from "../Interfaces/usuario";
 import { hashPassword, verifyPassword } from "../utils/contraseñaHandler";
@@ -140,3 +140,21 @@ export const checkSession = async (_req: Request, res: Response) => {
     }
     res.json({ user: { ...perfil, tipo: user.tipo } })
 }
+
+export const cambiarEstadoTecnicoController = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const { estado } = req.body;
+        
+        if (estado !== 'DISPONIBLE' && estado !== 'DESHABILITADO') {
+            res.status(400).json({ error: "Estado inválido" });
+            return;
+        }
+
+        const tecnicoActualizado = await cambiarEstadoTecnico(id, estado);
+        res.json({ tecnico: tecnicoActualizado });
+    } catch (error) {
+        console.error("Error al cambiar estado del técnico:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+}
